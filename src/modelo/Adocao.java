@@ -34,4 +34,12 @@ public class Adocao {
     public String getStatus() {
         return status;
     }
+
+    public void aprovar() {
+        this.status = APROVADA;
+    }
+
+    public void rejeitar() {
+        this.status = REJEITADA;
+    }
 }

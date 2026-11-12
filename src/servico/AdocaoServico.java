@@ -1,6 +1,7 @@
 package servico;
 
 import java.time.LocalDate;
+import excecoes.AdocaoNaoAprovadaException;
 import excecoes.AnimalIndisponivelException;
 import excecoes.PermissaoNegadaException;
 import modelo.Adocao;
@@ -37,6 +38,24 @@ public class AdocaoServico {
             throws PermissaoNegadaException {
         verificarAdministrador(responsavel);
         adocao.rejeitar();
+    }
+
+    public void concluirAdocao(Adocao adocao, Usuario responsavel)
+            throws PermissaoNegadaException, AdocaoNaoAprovadaException,
+            AnimalIndisponivelException {
+        verificarAdministrador(responsavel);
+
+        if (!Adocao.APROVADA.equals(adocao.getStatus())) {
+            throw new AdocaoNaoAprovadaException(
+                    "A solicitação de adoção não foi aprovada.");
+        }
+
+        Animal animal = adocao.getAnimal();
+        if (animal.isAdotado()) {
+            throw new AnimalIndisponivelException("O animal já foi adotado.");
+        }
+
+        animal.marcarComoAdotado();
     }
 
     private void verificarAdministrador(Usuario responsavel)
